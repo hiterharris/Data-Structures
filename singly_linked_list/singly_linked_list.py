@@ -1,62 +1,59 @@
 class Node:
-	def __init__(self, value=None, next_node=None):
-		self.value = value
-		self.next_node = next_node
-	def get_value(self):
-		return self.value
-	def get_next(self):
-		return self.next_node
-	def set_next(self, new_next):
-		self.next_node = new_next
+    def __init__(self, value=None):
+        self.value = value
+        self.next = None
+
 class LinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
-    def add_to_head(self, value):
-        new_node = Node(value)
-        if not self.head and not self.tail:
-            self.head = new_node
-            self.tail = new_node 
+        
+    def __str__(self):
+        if self.head is None:
+            return('Empty list')
         else:
-            new_node.set_next(self.head)
-            self.head = new_node
-    def add_to_end(self, value):
-        # regardless of if the list is empty or not, we need to wrap the value in a Node 
-        new_node = Node(value)
-        # what if the list is empty? 
-        if not self.head and not self.tail:
-            # set both head and tail to the new node 
-            self.head = new_node
-            self.tail = new_node
-        # what if the list isn't empty?
+            current = self.head
+            string = f'[{self.head.value}'
+            while current.next is not None:
+                string += f', {current.next.value}'
+                current = current.next
+            string += ']'
+            return string
+        
+    def add_to_tail(self, value):
+        if self.tail is None:
+            self.head = Node(value)
+            self.tail = self.head
         else:
-            # set the current tail's next to the new node 
-            self.tail.set_next(new_node)
-            # set self.tail to the new node 
-            self.tail = new_node
-    # we already have access to the head of the linked list, so we can directly remove from it 
-    # O(1)
-    def remove_from_head(self):
-        # what if the list is empty?
-        if not self.head:
-            return None
-        # what if it isn't empty?
-        else:
-            # we want to return the value at the current head 
-            value = self.head.get_value()
-            # remove the value at the head 
-            # update self.head 
-            self.head = self.head.get_next()
-            return value
-    # iterate over our linked list and print out each value in it 
-    def print_ll_elements(self):
+            self.tail.next = Node(value)
+            self.tail = self.tail.next
+
+    def contains(self, value):
         current = self.head
         while current is not None:
-            print(current.value)
-            current = current.get_next()
-ll = LinkedList()
-ll.add_to_head(3)
-ll.add_to_head(5)
-ll.add_to_head(9)
-ll.add_to_head(11)
-ll.print_ll_elements()
+            if current.value == value:
+                return True
+            else:
+                current = current.next
+        return False
+    
+    def remove_head(self):
+        if self.head is None:
+            return None
+        else:
+            value = self.head.value
+            self.head = self.head.next
+            if self.head is None:
+                self.tail = None
+            return value
+
+    def get_max(self):
+        if self.head is None:
+            return None
+        else:
+            current = self.head
+            max_value = self.head.value
+            while current.next is not None:
+                current = current.next
+                max_value = max((max_value, current.value))
+            return max_value
