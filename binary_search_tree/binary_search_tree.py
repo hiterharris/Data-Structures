@@ -15,18 +15,23 @@ class BinarySearchTree:
         self.left = None
         self.right = None
 
+
     # Insert the given value into the tree
     def insert(self, value):
         if value < self.value:
-            if self.left == None:
+            # we know we need to go left
+            # how do we know when we need to recurse again
+            if not self.left:
                 self.left = BinarySearchTree(value)
             else:
                 self.left.insert(value)
         else:
-            if self.right == None:
+            # we know we need to go right
+            if not self.right:
                 self.right = BinarySearchTree(value)
             else:
                 self.right.insert(value)
+
 
     # Return True if the tree contains the value
     # False if it does not
@@ -42,22 +47,32 @@ class BinarySearchTree:
                 return False
             return self.right.contains(target)
 
+
     # Return the maximum value found in the tree
     def get_max(self):
-        if self.right is None:
+        # we keep going right until there are no more nodes on the right side
+        if not self.right:
             return self.value
         else:
             return self.right.get_max()
 
+
     # Call the function `fn` on the value of each node
-    def for_each(self, cb):
-        cb(self.value)
-        if self.left is not None:
-            self.left.for_each(cb)
-        if self.right is not None:
-            self.right.for_each(cb)
+    def for_each(self, fn):
+        # call passed in function on the value of this node
+        fn(self.value)
+
+        # pass this function to the left child
+        if self.left:
+            self.left.for_each(fn)
+
+        # pass this function to the right child
+        if self.right:
+            self.right.for_each(fn)
+
 
     # Part 2 -----------------------
+
 
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
