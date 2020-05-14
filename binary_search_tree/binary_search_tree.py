@@ -9,6 +9,10 @@ This part of the project comprises two days:
 2. Implement the `in_order_print`, `bft_print`, and `dft_print` methods
    on the BSTNode class.
 """
+
+from collections import deque
+from stack import Stack
+
 class BinarySearchTree:
     def __init__(self, value):
         self.value = value
@@ -56,6 +60,17 @@ class BinarySearchTree:
         else:
             return self.right.get_max()
 
+    def iterative_get_max(self):
+        current_max = self.value
+        current = self
+
+        # traverse our structure
+        while current is not None:
+            if current.value > current_max:
+                current_max = current.value
+            # udate our current_max variable if we see larger value
+            current = current.right
+
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
@@ -77,17 +92,46 @@ class BinarySearchTree:
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self, node):
-        pass
+        if node.left is not None:
+            node.in_order_print(node.left)
+
+        print(node.value)
+
+        if node.right is not None:
+            node.in_order_print(node.right)
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self, node):
-        pass
+        queue = deque()
+        queue.append(self)
+
+        while len(queue) > 0:
+            current = queue.popleft()
+            if current.left:
+                queue.append(current.left)
+            if current.right:
+                queue.append(current.right)
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
+
     def dft_print(self, node):
-        pass
+        # create a node_stack
+        node_stack = Stack()
+        # push the current node onto stack
+        node_stack.push(node)
+        # while we have items on the stack
+        while node_stack.size > 0:
+            # print the current value and pop it off
+            node = node_stack.pop()
+            print(node.value)
+            # push the left value of current node if we can
+            if node.left is not None:
+                node_stack.push(node.left)
+            # push the right value of the current node if we can
+            if node.right is not None:
+                node_stack.push(node.right)
 
     # Stretch Goals -------------------------
     # Note: Research may be required
